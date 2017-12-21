@@ -10,7 +10,7 @@ class User extends Authenticatable
     use Notifiable;
 
     const USUARIO_VERIFICADO = '1';
-    const USURAIO_NO_VERIFICADO = '0';
+    const USUARIO_NO_VERIFICADO = '0';
 
     const USUARIO_ADMINISTRADOR = 'true';
     const USUARIO_REGULAR = 'false';
