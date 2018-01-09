@@ -17,7 +17,7 @@ class UserController extends ApiController
     public function index()
     {
         $usuarios = User::all();
-        return response()->json(['data' => $usuarios], 200);
+        return $this->showAll($usuarios);
     }
 
     /**
@@ -41,7 +41,7 @@ class UserController extends ApiController
         $campos['verification_token'] = User::generarVerificationToken();
         $campos['admin'] = User::USUARIO_REGULAR;
         $usuario = User::create($campos);
-        return response()->json(['data' => $usuario], 201);
+        return $this->showOne($usuario, 201);
     }
 
     /**
@@ -53,7 +53,7 @@ class UserController extends ApiController
     public function show($id)
     {
         $usuario = User::findOrFail($id);
-        return response()->json(['data' => $usuario], 200);
+        return $this->showOne($usuario);
     }
 
     /**
@@ -98,7 +98,7 @@ class UserController extends ApiController
         }
         $user->save();
 
-        return response()->json(['data' => $user], 200);
+        return $this->showOne($user);
     }
 
     /**
@@ -111,6 +111,6 @@ class UserController extends ApiController
     {
         $user = User::findOrFail($id);
         $user->delete();
-        return response()->json(['data' => $user], 200);
+        return $this->showOne($user);
     }
 }
