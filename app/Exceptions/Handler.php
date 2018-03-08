@@ -7,6 +7,7 @@ use App\Traits\ApiResponser;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -63,7 +64,7 @@ class Handler extends ExceptionHandler
         }
         //Validacion de Autenticación
         if($exception instanceof AuthenticationException){
-            return $this->unauthenticated($request, $e);
+            return $this->unauthenticated($request, $exception);
         }
         //Validacion de autorización
         if($exception instanceof AuthorizationException){
@@ -80,6 +81,13 @@ class Handler extends ExceptionHandler
         //Se coloca un condicional para cualquier otra exception de tipo HttpException (recordar que esta referencia debe ser de symfony {según tutorial de udemy})
         if($exception instanceof HttpException){
             return $this->errorResponse($exception->getMessage(),$exception->getStatusCode());
+        }
+        if($exception instanceof QueryException){
+            //dd($exception);
+            $codigo = $exception->errorInfo[1];
+            if($codigo == 1451){//Delete de un registro con constraint con otro tabla
+                return $this->errorResponse('No se puede eliminar de forma permanente el recurso porque está relacionado con algún otro', 409);
+            }
         }
         return parent::render($request, $exception);
     }
