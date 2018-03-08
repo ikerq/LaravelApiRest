@@ -9,6 +9,7 @@ use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -75,6 +76,10 @@ class Handler extends ExceptionHandler
         //Error metodo no permitido
         if($exception instanceof MethodNotAllowedHttpException){
             return $this->errorResponse('El método especificado en la petición no es válido',405);
+        }
+        //Se coloca un condicional para cualquier otra exception de tipo HttpException (recordar que esta referencia debe ser de symfony {según tutorial de udemy})
+        if($exception instanceof HttpException){
+            return $this->errorResponse($exception->getMessage(),$exception->getStatusCode());
         }
         return parent::render($request, $exception);
     }
