@@ -50,10 +50,11 @@ class UserController extends ApiController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(User $user)//--> CUIDADO QUE EL NOMBRE DEL PARAMETRO DEBE COINCIDIR CON EL DE LA RUTA, SI PONGO $usuario NO FUNCIONARA PORQUE EN LA RUTA TENGO $user
     {
-        $usuario = User::findOrFail($id);
-        return $this->showOne($usuario);
+        ///$user = User::findOrFail($id);
+        //Se inyecta implicitamente una instancia del modelo user en los metodos que lo requiera
+        return $this->showOne($user);
     }
 
     /**
@@ -63,9 +64,9 @@ class UserController extends ApiController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, User $user)
     {
-        $user = User::findOrFail($id);
+        //$user = User::findOrFail($id); --> se comenta porque se hizo una inyeccion implicita del modelo
         $reglas = [
             'email' => 'email|unique:users,email,'.$user->id,
             'password' => 'min:6|confirmed',
@@ -107,9 +108,9 @@ class UserController extends ApiController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(User $user)
     {
-        $user = User::findOrFail($id);
+        //$user = User::findOrFail($id); --> se comenta porque se hizo una inyeccion implicita del modelo
         $user->delete();
         return $this->showOne($user);
     }
