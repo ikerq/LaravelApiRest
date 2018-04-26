@@ -28,7 +28,6 @@ class CategoryController extends ApiController
      */
     public function store(Request $request)
     {
-        //
     }
 
     /**
@@ -39,7 +38,7 @@ class CategoryController extends ApiController
      */
     public function show(Category $category)
     {
-        //
+        return $this->showOne($category);
     }
 
     /**
